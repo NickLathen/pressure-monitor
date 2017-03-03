@@ -1,0 +1,43 @@
+{
+  "name": "under-pressure",
+  "version": "1.0.0",
+  "description": "graph rendering",
+  "main": "./server/app.js",
+  "dependencies": {
+    "babel-core": "^6.22.1",
+    "babel-loader": "^6.2.10",
+    "babel-preset-es2015": "^6.22.0",
+    "babel-preset-react": "^6.22.0",
+    "bcrypt-nodejs": "^0.0.3",
+    "body-parser": "^1.16.1",
+    "browser-request": "^0.3.3",
+    "chai": "^3.5.0",
+    "compression": "^1.6.2",
+    "express": "^4.14.1",
+    "express-session": "^1.15.1",
+    "mocha": "^3.2.0",
+    "passport": "^0.3.2",
+    "pg": "^6.1.2",
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2",
+    "react-router": "^3.0.2",
+    "redux": "^3.6.0",
+    "request": "^2.79.0",
+    "sequelize": "^3.30.2",
+    "webpack": "^1.14.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "mocha test/test,js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NickLathen/under-pressure.git"
+  },
+  "author": "Nick Lathen",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/NickLathen/under-pressure/issues"
+  },
+  "homepage": "https://github.com/NickLathen/under-pressure#readme"
+}
