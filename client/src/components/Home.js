@@ -18,7 +18,7 @@ export class Home extends React.Component {
     return (
       <div className='home'>
         <div className='blood-pressure-input-container'></div>
-        <div className='horizontal-divide'></div>
+        <hr className='horizontal-divide'></hr>
         <div className='blood-pressure-history-container'></div>
       </div>
     );
