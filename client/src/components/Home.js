@@ -4,25 +4,22 @@ export class Home extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      profile: props.auth.getProfile()
+      token: props.auth.getToken(),
+      bloodPressureData: []
     };
-    props.auth.on('profile_updated', (newProfile) => {
-      this.setState({profile: newProfile});
-    });
   }
 
-  logout() {
-    this.props.auth.logout();
-    this.props.router.push('/login');
+  componentDidMount() {
+
   }
 
   render() {
     const profile = this.state.profile;
     return (
       <div className='home'>
-        <h2>Home</h2>
-        <p>Welcome {profile.name}!</p>
-        <button onClick={this.logout.bind(this)}>Logout</button>
+        <div className='blood-pressure-input-container'></div>
+        <div className='horizontal-divide'></div>
+        <div className='blood-pressure-history-container'></div>
       </div>
     );
   }

@@ -1,6 +1,5 @@
 import React from 'react';
 import { Router, Route, IndexRedirect, browserHistory } from 'react-router';
-import store from '../reduxStore.js';
 import AuthService from '../auth/auth.js';
 import config from '../../../config/config.js';
 import AppContainer from './AppContainer.js';
@@ -20,10 +19,9 @@ const requireAuth = (nextState, replace) => {
 export default class App extends React.Component {
   constructor(props) {
     super(props);
-    store.subscribe(this.setState.bind(this, {}));
   }
 
-  render(props) {
+  render() {
     return (
       <div>
         <Nav auth={auth}/>
