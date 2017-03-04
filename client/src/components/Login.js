@@ -1,18 +1,10 @@
-import React, { PropTypes as T } from 'react';
-import AuthService from '../auth/auth.js';
+import React from 'react';
 
-export default class Login extends React.Component {
-  componentDidMount() {
-    if (this.props.route.path === 'login') {
-      const auth = this.props.auth;
-      auth.login(); 
-    }
-  }
-
-  render() {
-    return (
-      <div>
-      </div>
-    );
-  }
+export default function Login(props) {
+  const auth = props.auth;
+  return (
+    <div className='login'>
+        <button onClick={auth.login.bind(this)}>Login</button>
+    </div>
+  );
 }

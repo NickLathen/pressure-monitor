@@ -26,7 +26,7 @@ export default class App extends React.Component {
   render(props) {
     return (
       <div>
-        <Nav/>
+        <Nav auth={auth}/>
         <Router history={browserHistory}>
           <Route path='/' component={AppContainer} auth={auth}>
             <IndexRedirect to='/home'/>
