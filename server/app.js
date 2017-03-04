@@ -1,9 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const compression = require('compression');
-const session = require('express-session');
-const auth = require('./auth.js');
-const passport = auth.passport;
+const authenticate = require('./middlewares/authenticate.js');
 const app = express();
 const port = process.env.PORT || 9999;
 const folderNameLength = __dirname.split('').reverse().indexOf('/');
@@ -13,9 +11,9 @@ app.use(compression());
 app.use(express.static(appDirectory + '/client'));
 app.use(bodyParser.json({type: 'application/json'}));
 app.use(bodyParser.urlencoded({type: 'application/x-www-form-urlencoded', extended: true}));
-app.use(session({secret: 'underpressure', resave: true, saveUninitialized: false}));
-app.use(passport.initialize());
-app.use(passport.session());
+app.use(authenticate);
+
+
 
 app.get('*', (request, response) => {
   response.sendFile(`${appDirectory}/client/index.html`);
