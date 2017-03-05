@@ -55,23 +55,8 @@ export default class Graph {
     this.render();
   }
 
-  scrollHome() {
-    const scrollPerTick = this.offset / 100;
-    this.scrollLoop = function scrollLoop () {
-      if (this.offset > scrollPerTick) {
-        this.offset -= scrollPerTick;
-      } else {
-        this.offset = 0;
-      }
-      if (this.offset !== 0) {
-        this.scrollTimeout = requestAnimationFrame(this.scrollLoop);
-      }
-    }.bind(this);
-    this.scrollTimeout = requestAnimationFrame(this.scrollLoop);
-  }
-
   scrollMomentum() {
-    const friction = 2;
+    const friction = 1.5;
     this.momentumLoop = function momentumLoop() {
       if (Math.abs(this.lastMovementX) < 2 * friction) {
         this.lastMovementX = 0;
@@ -87,6 +72,21 @@ export default class Graph {
     this.scrollTimeout = requestAnimationFrame(this.momentumLoop);
   }
 
+  scrollHome() {
+    const scrollPerTick = this.offset / 100;
+    this.scrollLoop = function scrollLoop () {
+      if (this.offset > scrollPerTick) {
+        this.offset -= scrollPerTick;
+      } else {
+        this.offset = 0;
+      }
+      if (this.offset !== 0) {
+        this.scrollTimeout = requestAnimationFrame(this.scrollLoop);
+      }
+    }.bind(this);
+    this.scrollTimeout = requestAnimationFrame(this.scrollLoop);
+  }
+  
   startResize() {
     this.resizeLoop = function resizeLoop () {
       this.resizeCanvas();
@@ -140,7 +140,7 @@ export default class Graph {
 
   drawDataSets() {
     const c = this.context;
-    c.lineWidth = 2;
+    c.lineWidth = this.height / 180;
     this.dataSets.forEach(dataSet => {
       const startingPoint = this.convertGraphToCanvas(dataSet.points[0].date, dataSet.points[0].value);
       c.strokeStyle = dataSet.color;
@@ -162,10 +162,11 @@ export default class Graph {
 
   drawRows() {
     const c = this.context;
-    c.setLineDash([1, 1]);
     const rowSpacing = (this.maxY - this.minY) / (this.numRows - 1);
+    c.setLineDash([1, 1]);
     c.fillStyle = 'grey';
     c.strokeStyle = 'grey';
+    c.lineWidth = this.height / 400;
     c.beginPath();
     for (var row = 1; row <= this.numRows; row++) {
       const rowValue = this.minY + ((row - 1) * rowSpacing);
@@ -179,6 +180,7 @@ export default class Graph {
     }
     c.stroke();
     c.setLineDash([]);
+    c.lineWidth = 1;
     c.fillStyle = 'black';
     c.strokeStyle = 'black';
   }
