@@ -12,6 +12,7 @@ export default class Graph {
     this.mousedownHandler = this.mousedownHandler.bind(this);
     this.mouseupHandler = this.mouseupHandler.bind(this);
     this.mousemoveHandler = this.mousemoveHandler.bind(this);
+    this.scrollHome = this.scrollHome.bind(this);
     this.resizeCanvas();
     this.startResize();
     this.addListeners();
@@ -31,9 +32,11 @@ export default class Graph {
 
   addListeners() {
     this.canvas.addEventListener('mousedown', this.mousedownHandler);
+    this.canvas.addEventListener('dblclick', this.scrollHome);
   }
 
   mousedownHandler(event) {
+    cancelAnimationFrame(this.scrollTimeout);
     document.addEventListener('mouseup', this.mouseupHandler);
     document.addEventListener('mousemove', this.mousemoveHandler);
   }
@@ -41,23 +44,55 @@ export default class Graph {
   mouseupHandler(event) {
     document.removeEventListener('mouseup', this.mouseupHandler);
     document.removeEventListener('mousemove', this.mousemoveHandler);
-
+    this.scrollMomentum();
   }
 
   mousemoveHandler(event) {
     const movementX = event.movementX;
-    this.lastmovementX = movementX;
+    this.lastMovementX = movementX;
     this.offset = this.offset + movementX * 1.5 * 1000 * 1000;
     this.offset = Math.max(0, this.offset);
     this.render();
   }
 
+  scrollHome() {
+    const scrollPerTick = this.offset / 100;
+    this.scrollLoop = function scrollLoop () {
+      if (this.offset > scrollPerTick) {
+        this.offset -= scrollPerTick;
+      } else {
+        this.offset = 0;
+      }
+      if (this.offset !== 0) {
+        this.scrollTimeout = requestAnimationFrame(this.scrollLoop);
+      }
+    }.bind(this);
+    this.scrollTimeout = requestAnimationFrame(this.scrollLoop);
+  }
+
+  scrollMomentum() {
+    const friction = 2;
+    this.momentumLoop = function momentumLoop() {
+      if (Math.abs(this.lastMovementX) < 2 * friction) {
+        this.lastMovementX = 0;
+      } else if (this.lastMovementX > 0) {
+        this.lastMovementX -= friction;
+      } else {
+        this.lastMovementX += friction;
+      }
+      this.offset = this.offset + this.lastMovementX * 1.5 * 1000 * 1000;
+      this.offset = Math.max(0, this.offset);
+      this.scrollTimeout = requestAnimationFrame(this.momentumLoop);
+    }.bind(this);
+    this.scrollTimeout = requestAnimationFrame(this.momentumLoop);
+  }
+
   startResize() {
-    this.resizeLoop = function() {
+    this.resizeLoop = function resizeLoop () {
       this.resizeCanvas();
       requestAnimationFrame(this.resizeLoop.bind(this));
     }.bind(this);
-    requestAnimationFrame(this.resizeLoop);
+    requestAnimationFrame(this.resizeLoop.bind(this));
   }
 
   stopResize() {
