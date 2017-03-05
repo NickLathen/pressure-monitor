@@ -8,8 +8,13 @@ export default class Graph {
     this.canvas = canvas;
     this.container = container;
     this.context = canvas.getContext('2d');
+    this.offset = 0;
+    this.mousedownHandler = this.mousedownHandler.bind(this);
+    this.mouseupHandler = this.mouseupHandler.bind(this);
+    this.mousemoveHandler = this.mousemoveHandler.bind(this);
     this.resizeCanvas();
     this.startResize();
+    this.addListeners();
   }
 
   resizeCanvas() {
@@ -25,6 +30,26 @@ export default class Graph {
   }
 
   addListeners() {
+    this.canvas.addEventListener('mousedown', this.mousedownHandler);
+  }
+
+  mousedownHandler(event) {
+    document.addEventListener('mouseup', this.mouseupHandler);
+    document.addEventListener('mousemove', this.mousemoveHandler);
+  }
+
+  mouseupHandler(event) {
+    document.removeEventListener('mouseup', this.mouseupHandler);
+    document.removeEventListener('mousemove', this.mousemoveHandler);
+
+  }
+
+  mousemoveHandler(event) {
+    const movementX = event.movementX;
+    this.lastmovementX = movementX;
+    this.offset = this.offset + movementX * 1.5 * 1000 * 1000;
+    this.offset = Math.max(0, this.offset);
+    this.render();
   }
 
   startResize() {
@@ -87,7 +112,7 @@ export default class Graph {
       c.beginPath();
       c.moveTo(startingPoint.x, startingPoint.y);
       dataSet.points.forEach(dataPoint => {
-        if (dataPoint.date < this.startDate - oneMonth || dataPoint.date > this.currentDate + oneMonth) {
+        if (dataPoint.date < this.startDate - oneMonth || dataPoint.date > (this.startDate + this.unitWidth) + oneMonth) {
           return;
         } else {
           const canvasCoordinates = this.convertGraphToCanvas(dataPoint.date, dataPoint.value);
@@ -109,10 +134,10 @@ export default class Graph {
     c.beginPath();
     for (var row = 1; row <= this.numRows; row++) {
       const rowValue = this.minY + ((row - 1) * rowSpacing);
-      const rowPosition = this.convertGraphToCanvas(this.currentDate, rowValue); 
+      const rowPosition = this.convertGraphToCanvas(this.startDate + this.unitWidth, rowValue); 
       c.moveTo(0, rowPosition.y);
       c.lineTo(rowPosition.x, rowPosition.y);
-      const textPosition = this.convertGraphToCanvas(this.currentDate, rowValue);
+      const textPosition = this.convertGraphToCanvas(this.startDate + this.unitWidth, rowValue);
       const fontSize = Math.floor(this.width * (1 - BORDER_WIDTH) / 20);
       c.font = `${fontSize}px sans-serif`;
       c.fillText(rowValue, textPosition.x + fontSize * .1, textPosition.y + fontSize * .3);
@@ -162,6 +187,9 @@ export default class Graph {
     if (data) {
       this.loadData(data);
     }
+    this.unitHeight = this.maxY - this.minY + (this.maxY - this.minY) * .1;
+    this.unitWidth = this.convertPeriodToMilliseconds(this.period);
+    this.startDate = this.currentDate - this.unitWidth - this.offset;
     this.clear();
     this.drawDataSets();
     this.clearYAxis();
@@ -176,9 +204,6 @@ export default class Graph {
     this.period = data.period;
     this.currentDate = data.currentDate;
     this.dataSets = data.dataSets;
-    this.unitHeight = this.maxY - this.minY + (this.maxY - this.minY) * .1;
-    this.unitWidth = this.convertPeriodToMilliseconds(this.period);
-    this.startDate = this.currentDate - this.unitWidth;
   }
 
   convertPeriodToMilliseconds(period) {
