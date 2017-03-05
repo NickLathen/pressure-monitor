@@ -1,5 +1,7 @@
 import React from 'react';
 import Graph from '../graph/graph.js';
+import mocks from '../test/mock.js';
+const generatePressures = mocks.generatePressures;
 
 export default class BloodPressureHistory extends React.Component {
   constructor(props) {
@@ -10,6 +12,17 @@ export default class BloodPressureHistory extends React.Component {
     const graphElement = document.querySelector('.graph');
     const graphContainer = document.querySelector('.graph-container');
     this.graph = new Graph(graphElement, graphContainer);
+    this.graph.render({
+      numRows: 7,
+      minY: 60,
+      maxY: 180,
+      period: {
+        type: 'month',
+        amount: 3
+      },
+      currentDate: Date.now(),
+      dataSets: generatePressures()
+    });
   }
 
   render() {
