@@ -193,13 +193,13 @@ body {
 }
 
 .graph-header {
-  height: 7%;
+  height: 11%;
   width: 100%;
   background-color: darkorange;
 }
 
 .graph-container {
-  height: 93%;
+  height: 89%;
 }
 
 .graph {

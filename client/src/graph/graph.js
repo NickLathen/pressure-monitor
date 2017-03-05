@@ -41,7 +41,21 @@ export default class Graph {
     const percentageY = (y - this.minY) / this.unitHeight;
     const graphX = this.width * percentageX;
     const graphY = this.height * percentageY;
-    return this.convertCartesianToCanvas(graphX, graphY); 
+    const cartesianX = graphX * (1 - BORDER_WIDTH);
+    const cartesianY = (BORDER_WIDTH * this.height) + graphY * (1 - BORDER_WIDTH);
+    return this.convertCartesianToCanvas(cartesianX, cartesianY); 
+  }
+
+  clear() {
+    const c = this.context;
+    c.clearRect(0, 0, this.width, this.height);
+  }
+
+  clearYAxis() {
+    const c = this.context;
+    const x = this.width - this.width * BORDER_WIDTH;
+    const y = 0;
+    c.clearRect(x, y, this.height, this.width);
   }
 
   drawDataSets() {
@@ -51,7 +65,7 @@ export default class Graph {
       c.beginPath();
       c.moveTo(startingPoint.x, startingPoint.y);
       dataSet.points.forEach(dataPoint => {
-        if (dataPoint.date < this.startDate || dataPoint.date > this.currentDate) {
+        if (dataPoint.date < this.startDate - oneMonth || dataPoint.date > this.currentDate + oneMonth) {
           return;
         } else {
           const canvasCoordinates = this.convertGraphToCanvas(dataPoint.date, dataPoint.value);
@@ -62,6 +76,25 @@ export default class Graph {
     });
   }
 
+  drawRows() {
+    const c = this.context;
+    c.setLineDash([1, 4]);
+    const rowSpacing = (this.maxY - this.minY) / (this.numRows - 1);
+    c.beginPath();
+    for (var row = 1; row <= this.numRows; row++) {
+      const rowValue = this.minY + ((row - 1) * rowSpacing);
+      const rowPosition = this.convertGraphToCanvas(this.currentDate, rowValue); 
+      c.moveTo(0, rowPosition.y);
+      c.lineTo(rowPosition.x, rowPosition.y);
+      const textPosition = this.convertGraphToCanvas(this.currentDate + (.05 * this.unitWidth), rowValue);
+      const fontSize = Math.floor(this.height * (1 - BORDER_WIDTH) / this.numRows * .6);
+      c.font = `${fontSize}px sans-serif`;
+      c.fillText(rowValue, textPosition.x, textPosition.y + fontSize * .3);
+    }
+    c.stroke();
+    c.setLineDash([]);
+  }
+
   render(data) {
     this.numRows = data.numRows;
     this.minY = data.minY;
@@ -69,15 +102,20 @@ export default class Graph {
     this.period = data.period;
     this.currentDate = data.currentDate;
     this.dataSets = data.dataSets;
-    this.unitHeight = this.maxY - this.minY;
+    this.unitHeight = this.maxY - this.minY + (this.maxY - this.minY) * .1;
     this.unitWidth = this.convertPeriodToMilliseconds(this.period);
     this.startDate = this.currentDate - this.unitWidth;
+    this.clear();
     this.drawDataSets();
+    this.clearYAxis();
+    this.drawRows();
   }
 
   convertPeriodToMilliseconds(period) {
     if (period.type === 'month') {
       return period.amount * oneMonth;
+    } else if (period.type === 'week') {
+      return period.amount * oneWeek;
     }
   }
   
