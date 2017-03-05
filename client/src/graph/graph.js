@@ -112,10 +112,10 @@ export default class Graph {
       const rowPosition = this.convertGraphToCanvas(this.currentDate, rowValue); 
       c.moveTo(0, rowPosition.y);
       c.lineTo(rowPosition.x, rowPosition.y);
-      const textPosition = this.convertGraphToCanvas(this.currentDate + (.02 * this.unitWidth), rowValue);
-      const fontSize = Math.floor(this.height * (1 - BORDER_WIDTH) / this.numRows * .6);
+      const textPosition = this.convertGraphToCanvas(this.currentDate, rowValue);
+      const fontSize = Math.floor(this.width * (1 - BORDER_WIDTH) / 20);
       c.font = `${fontSize}px sans-serif`;
-      c.fillText(rowValue, textPosition.x, textPosition.y + fontSize * .3);
+      c.fillText(rowValue, textPosition.x + fontSize * .1, textPosition.y + fontSize * .3);
     }
     c.stroke();
     c.setLineDash([]);
@@ -149,7 +149,7 @@ export default class Graph {
       const month = labelDateObject.getMonth() + 1;
       const date = labelDateObject.getDate();
       const labelPosition = this.convertGraphToCanvas(labelDate, this.minY);
-      const fontSize = Math.floor(this.height * (1 - BORDER_WIDTH) / 12);
+      const fontSize = Math.floor(this.width * (1 - BORDER_WIDTH) / 20);
       c.font = `${fontSize}px sans-serif`;
       c.fillText(`${month}/${date}`, labelPosition.x + -1.5 * fontSize, labelPosition.y + fontSize);
       labelDate = labelDate + oneWeek;
