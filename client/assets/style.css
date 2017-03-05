@@ -117,7 +117,7 @@ body {
   width: 100vmin;
 }
 
-.blood-pressure-input-container > p {
+.blood-pressure-input-header {
   margin: 3% 0;
   text-align: center;
   font-size: 3.5vmin;
@@ -127,7 +127,7 @@ body {
 .blood-pressure-text-border {
   display: flex;
   align-items: center;
-  border: 1px solid grey;
+  border: 2px solid grey;
   border-radius: 7px;
   margin: 0 auto;
   height: 10vmin;
@@ -157,13 +157,24 @@ body {
 .button-submit {
   outline: none;
   width: 35vmin;
-  margin: 2vmin auto;
+  margin: 2vmin auto 0 auto;
   border-radius: 2vmin;
   border: .5vmin solid black;
   padding: .5vmin 5vmin;
   color: white;
   background-color: #552DB9;
   font-size: 4.5vmin;
+}
+
+.button-submit:hover {
+  background-color: darkorange;
+}
+
+.submit-warning {
+  color: red;
+  margin: .5vmin;
+  font-size: 2.5vmin;
+  text-align: center;
 }
 
 .horizontal-divide {
@@ -179,6 +190,18 @@ body {
   width: 100%;
   height: 62%;
   border: 1px solid blue;
+}
+
+.graph-header {
+  
+}
+
+.graph-container {
+  
+}
+
+.graph {
+
 }
 
 .login {

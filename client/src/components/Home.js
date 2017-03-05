@@ -16,7 +16,7 @@ export class Home extends React.Component {
   }
 
   submitPressure(systolic, diastolic) {
-    
+
   }
 
   render() {
@@ -25,7 +25,7 @@ export class Home extends React.Component {
       <div className='home'>
         <BloodPressureInput submitPressure={this.submitPressure.bind(this)}/>
         <hr className='horizontal-divide'></hr>
-        <BloodPressureHistory/>
+        <BloodPressureHistory pressureData={this.state.bloodPressureData}/>
       </div>
     );
   }
