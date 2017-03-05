@@ -47,6 +47,11 @@ table {
   border-spacing: 0;
 }
 
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 100;
+}
+
 .app-container {
   position: fixed;
   top: 7vh;
@@ -98,10 +103,67 @@ table {
   height: 93vh;
 }
 
-.blood-pressure-input-container {
+.blood-pressure-input {
   width: 100%;
   height: 35%;
-  border: 1px solid purple;
+  display: flex;
+  align-items: center;
+}
+
+.blood-pressure-input-container {
+  display: flex;
+  flex-direction: column;
+  margin: auto auto;
+  width: 100vmin;
+}
+
+.blood-pressure-input-container > p {
+  margin: 3% 0;
+  text-align: center;
+  font-size: 3.5vmin;
+
+}
+
+.blood-pressure-text-border {
+  display: flex;
+  align-items: center;
+  border: 1px solid grey;
+  border-radius: 7px;
+  margin: 0 auto;
+  height: 10vmin;
+}
+
+
+.systolic-input {
+  outline: none;
+  border: none;
+  text-align: right;
+  font-size: 8vmin;
+  width: 16vmin;
+}
+
+.tight-slash {
+  color: grey;
+  font-size: 8vmin;
+}
+
+.diastolic-input {
+  outline: none;
+  border: none;
+  font-size: 8vmin;
+  width: 14vmin;
+}
+
+.button-submit {
+  outline: none;
+  width: 35vmin;
+  margin: 2vmin auto;
+  border-radius: 2vmin;
+  border: .5vmin solid black;
+  padding: .5vmin 5vmin;
+  color: white;
+  background-color: #552DB9;
+  font-size: 4.5vmin;
 }
 
 .horizontal-divide {
@@ -113,7 +175,7 @@ table {
   background-color: lightgrey;
 }
 
-.blood-pressure-history-container {
+.blood-pressure-history {
   width: 100%;
   height: 62%;
   border: 1px solid blue;

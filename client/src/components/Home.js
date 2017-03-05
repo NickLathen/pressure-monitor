@@ -1,4 +1,6 @@
 import React from 'react';
+import BloodPressureInput from './BloodPressureInput';
+import BloodPressureHistory from './BloodPressureHistory';
 
 export class Home extends React.Component {
   constructor(props) {
@@ -10,16 +12,20 @@ export class Home extends React.Component {
   }
 
   componentDidMount() {
+    
+  }
 
+  submitPressure(systolic, diastolic) {
+    
   }
 
   render() {
     const profile = this.state.profile;
     return (
       <div className='home'>
-        <div className='blood-pressure-input-container'></div>
+        <BloodPressureInput submitPressure={this.submitPressure.bind(this)}/>
         <hr className='horizontal-divide'></hr>
-        <div className='blood-pressure-history-container'></div>
+        <BloodPressureHistory/>
       </div>
     );
   }
