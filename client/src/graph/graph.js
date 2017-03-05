@@ -67,7 +67,9 @@ export default class Graph {
       }
       this.offset = this.offset + this.lastMovementX * 1.5 * 1000 * 1000;
       this.offset = Math.max(0, this.offset);
-      this.scrollTimeout = requestAnimationFrame(this.momentumLoop);
+      if (this.offset) {
+        this.scrollTimeout = requestAnimationFrame(this.momentumLoop);
+      }
     }.bind(this);
     this.scrollTimeout = requestAnimationFrame(this.momentumLoop);
   }
@@ -80,7 +82,7 @@ export default class Graph {
       } else {
         this.offset = 0;
       }
-      if (this.offset !== 0) {
+      if (this.offset) {
         this.scrollTimeout = requestAnimationFrame(this.scrollLoop);
       }
     }.bind(this);
