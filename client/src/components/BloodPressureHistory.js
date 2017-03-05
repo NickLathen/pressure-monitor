@@ -14,23 +14,18 @@ export default class BloodPressureHistory extends React.Component {
     this.graph = new Graph(graphElement, graphContainer);
     let currentDate = Date.now();
     const dataSets = generatePressures();
-    const animate = () => {
-      currentDate = currentDate - 1000 * 1000 * 3;
-      this.graph.render({
-        numRows: 7,
-        minY: 60,
-        maxY: 180,
-        period: {
-          type: 'month',
-          amount: 1
-        },
-        currentDate: currentDate,
-        dataSets: dataSets
-      });
-      requestAnimationFrame(animate);
-    };
-    requestAnimationFrame(animate);
-
+    currentDate = currentDate - 1000 * 1000 * 3;
+    this.graph.render({
+      numRows: 7,
+      minY: 60,
+      maxY: 180,
+      period: {
+        type: 'month',
+        amount: 1
+      },
+      currentDate: currentDate,
+      dataSets: dataSets
+    });
   }
 
   render() {

@@ -9,6 +9,7 @@ export default class Graph {
     this.container = container;
     this.context = canvas.getContext('2d');
     this.resizeCanvas();
+    this.startResize();
   }
 
   resizeCanvas() {
@@ -18,6 +19,26 @@ export default class Graph {
     this.canvas.setAttribute('width', containerWidth);
     this.height = containerHeight;
     this.width = containerWidth;
+    if (this.dataSets) {
+      this.render();
+    }
+  }
+
+  addListeners() {
+  }
+
+  startResize() {
+    this.resizeLoop = function() {
+      this.resizeCanvas();
+      requestAnimationFrame(this.resizeLoop.bind(this));
+    }.bind(this);
+    requestAnimationFrame(this.resizeLoop);
+  }
+
+  stopResize() {
+    if (this.resizeLoop) {
+      cancelAnimationFrame(this.resizeLoop);
+    }
   }
 
   convertCanvasToCartesian(x, y) {
@@ -136,8 +157,19 @@ export default class Graph {
     c.stroke();
     c.fillStyle = 'black';
   }
-
+ 
   render(data) {
+    if (data) {
+      this.loadData(data);
+    }
+    this.clear();
+    this.drawDataSets();
+    this.clearYAxis();
+    this.drawRows();
+    this.drawXAxisLabels();
+  }
+  
+  loadData(data) {
     this.numRows = data.numRows;
     this.minY = data.minY;
     this.maxY = data.maxY;
@@ -147,11 +179,6 @@ export default class Graph {
     this.unitHeight = this.maxY - this.minY + (this.maxY - this.minY) * .1;
     this.unitWidth = this.convertPeriodToMilliseconds(this.period);
     this.startDate = this.currentDate - this.unitWidth;
-    this.clear();
-    this.drawDataSets();
-    this.clearYAxis();
-    this.drawRows();
-    this.drawXAxisLabels();
   }
 
   convertPeriodToMilliseconds(period) {
