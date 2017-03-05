@@ -203,7 +203,7 @@ body {
 }
 
 .graph {
-
+  cursor: pointer;
 }
 
 .login {

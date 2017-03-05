@@ -15,7 +15,7 @@ export default {
     for (let time = then; time <= now; time = time + oneDay) {
       systolicPoints.push({
         date: time,
-        value: Math.floor(120 + Math.random() * 10 - Math.random() * 10)
+        value: Math.floor(140 + Math.random() * 10 - Math.random() * 10)
       });
       diastolicPoints.push({
         date: time,
