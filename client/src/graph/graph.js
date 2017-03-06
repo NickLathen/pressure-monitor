@@ -36,6 +36,7 @@ export default class Graph {
   }
 
   mousedownHandler(event) {
+    this.lastMovementX = 0;
     cancelAnimationFrame(this.scrollTimeout);
     document.addEventListener('mouseup', this.mouseupHandler);
     document.addEventListener('mousemove', this.mousemoveHandler);
@@ -56,9 +57,9 @@ export default class Graph {
   }
 
   scrollMomentum() {
-    const friction = 1.5;
+    const friction = 3;
     this.momentumLoop = function momentumLoop() {
-      if (Math.abs(this.lastMovementX) < 2 * friction) {
+      if (Math.abs(this.lastMovementX) < friction) {
         this.lastMovementX = 0;
       } else if (this.lastMovementX > 0) {
         this.lastMovementX -= friction;
