@@ -8,7 +8,8 @@ export default class Graph {
     this.canvas = canvas;
     this.container = container;
     this.context = canvas.getContext('2d');
-    this.offset = -oneDay;
+    this.minOffset = 0;
+    this.offset = this.minOffset;
     this.mousedownHandler = this.mousedownHandler.bind(this);
     this.mouseupHandler = this.mouseupHandler.bind(this);
     this.mousemoveHandler = this.mousemoveHandler.bind(this);
@@ -52,7 +53,7 @@ export default class Graph {
     const movementX = event.movementX;
     this.lastMovementX = movementX;
     this.offset = this.offset + movementX * 1.5 * 1000 * 1000;
-    this.offset = Math.max(-oneDay, this.offset);
+    this.offset = Math.max(this.minOffset, this.offset);
     this.render();
   }
 
@@ -68,7 +69,7 @@ export default class Graph {
         this.lastMovementX += friction;
       }
       this.offset = this.offset + this.lastMovementX * 1.5 * 1000 * 1000;
-      this.offset = Math.max(-oneDay, this.offset);
+      this.offset = Math.max(this.minOffset, this.offset);
       if (this.lastMovementX) {
         this.scrollTimeout = requestAnimationFrame(this.momentumLoop);
       }
@@ -81,12 +82,12 @@ export default class Graph {
     cancelAnimationFrame(this.scrollTimeout);
     const scrollPerTick = this.offset / 100;
     this.scrollLoop = function scrollLoop () {
-      if (this.offset > -oneDay) {
+      if (this.offset > this.minOffset) {
         this.offset -= scrollPerTick;
       } else {
-        this.offset = -oneDay;
+        this.offset = this.minOffset;
       }
-      if (this.offset !== -oneDay) {
+      if (this.offset !== this.minOffset) {
         this.scrollTimeout = requestAnimationFrame(this.scrollLoop);
       }
     }.bind(this);
@@ -243,6 +244,7 @@ export default class Graph {
     }
     this.unitHeight = this.maxY - this.minY + (this.maxY - this.minY) * .1;
     this.unitWidth = this.convertPeriodToMilliseconds(this.period);
+    this.minOffset = -this.unitWidth * .01;
     this.startDate = this.currentDate - this.unitWidth - this.offset;
     this.clear();
     this.drawDataSets();
@@ -265,6 +267,8 @@ export default class Graph {
       return period.amount * oneMonth;
     } else if (period.type === 'week') {
       return period.amount * oneWeek;
+    } else if (period.type === 'year') {
+      return period.amount * 12 * oneMonth;
     }
   }
 }
