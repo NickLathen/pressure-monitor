@@ -42,23 +42,31 @@ module.exports = {
       userController.addPressure(username, {date, systolic, diastolic})
       .then(pressure => {
         response.status(200);
-        response.send('success');
+        response.send(['success']);
       })
       .catch(error => {
+        console.error(error);
         response.status(500);
-        response.send('internal error');
+        response.send(['internal error']);
       });
     });
   },
   getPressures(request, response) {
     const body = request.body;
     const token = body.token;
+    console.log(token);
     getUsername(token)
     .then(username => {
-      userController.getPressures(username)
+      return userController.getPressures(username)
       .then(pressures => {
-        debugger;
+        response.status(200);
+        response.send(pressures);
       });
+    })
+    .catch(error => {
+      console.error(error);
+      response.status(500);
+      response.send(['internal error']);
     });
   }
 };

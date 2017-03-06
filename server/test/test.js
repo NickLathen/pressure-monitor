@@ -1,8 +1,12 @@
 const expect = require('chai').expect;
+const config = require('../../config/config.js');
+const token = config.token;
 const controllers = require('../../db/controllers.js');
 const models = require('../../db/models.js');
 const userModel = models.userModel;
 const userController = controllers.userController;
+const api = require('../middlewares/api.js');
+const mock = require('./mock.js');
 
 const user1 = 'Alice';
 const user2 = 'Bob';
@@ -58,5 +62,77 @@ describe('Database', () => {
       })
       .catch(done);
     });
+  });
+});
+
+describe('api middleware', () => {
+  var numPressures = 0;
+  it('should submit pressures', done => {
+    const requestMock = {
+      body: {
+        token: token,
+        systolic: pressure1.systolic,
+        diastolic: pressure1.diastolic,
+        date: Date.now()
+      }
+    };
+    const responseMock = {
+      status() {
+      },
+      send(apiResponse) {
+        expect(apiResponse[0]).to.equal('success');
+        done();
+      }
+    };
+    api.submitPressure(requestMock, responseMock);
+  });
+  it('should submit alot of pressures', done => {
+    const submitPromiseFunctions = [];
+    const pressures = mock.generatePressures();
+    pressures.forEach(pressure => {
+      const submitPressurePromise = function() {
+        return new Promise((resolve, reject) => {
+          const requestMock = {
+            body: {
+              token: token,
+              systolic: pressure.systolic,
+              diastolic: pressure.diastolic,
+              date: pressure.date
+            }
+          };
+          const responseMock = {
+            status() {
+            },
+            send(apiResponse) {
+              resolve(apiResponse);
+            }
+          };
+          api.submitPressure(requestMock, responseMock);
+        }); 
+      };
+      submitPromiseFunctions.push(submitPressurePromise);
+    });
+    numPressures = submitPromiseFunctions.length;
+    mock.promiseAllSync(submitPromiseFunctions)
+    .then(submitResponses => {
+      expect(submitResponses.length).to.equal(numPressures);
+      done();
+    });
+  }).timeout(0);
+  it('should retrieve pressures', done => {
+    const requestMock = {
+      body: {
+        token: token,
+      }
+    };
+    const responseMock = {
+      status() {
+      },
+      send(pressures) {
+        expect(pressures.length).to.equal(numPressures + 1);
+        done();
+      }
+    };
+    api.getPressures(requestMock, responseMock);
   });
 });

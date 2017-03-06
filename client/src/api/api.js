@@ -18,6 +18,7 @@ export default {
       url: '/api/submitPressure',
       method: 'POST',
       body: {token, systolic, diastolic},
+      json: true
     });
   },
   getPressures(token) {
