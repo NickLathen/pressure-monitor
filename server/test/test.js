@@ -6,6 +6,8 @@ const userController = controllers.userController;
 
 const user1 = 'Alice';
 const user2 = 'Bob';
+const pressure1 = {date: 1, systolic: 140, diastolic: 80};
+const pressure2 = {date: 2, systolic: 130, diastolic: 85};
 
 describe('Database', () => {
   it('should sync the models without error', done => {
@@ -34,6 +36,26 @@ describe('Database', () => {
         expect(users[1].username).to.equal(user2);
         done();
       });
+    });
+    it('should add pressures', done => {
+      Promise.all([
+        userController.addPressure(user1, pressure1),
+        userController.addPressure(user1, pressure2),
+      ])
+      .then((pressures) => {
+        expect(+pressures[0].date).to.equal(pressure1.date);
+        expect(+pressures[1].date).to.equal(pressure2.date);
+        done();
+      })
+      .catch(done);
+    });
+    it('should get pressures', done => {
+      userController.getPressures(user1)
+      .then((pressures) => {
+        expect(pressures.length).to.equal(2);
+        done();
+      })
+      .catch(done);
     });
   });
 });

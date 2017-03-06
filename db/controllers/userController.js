@@ -10,9 +10,20 @@ const createUser = function createUser(username) {
   return userModel.create({username});
 };
 const getPressures = function createUser(username) {
-  debugger;
+  return getUser(username)
+  .then(user => {
+    return pressureModel.findAll({where: {userId: user._id}});
+  });
 };
-const addPressure = function addPressure(username) {
+const addPressure = function addPressure(username, pressure) {
+  return getUser(username)
+  .then(user => {
+    const date = pressure.date;
+    const systolic = pressure.systolic;
+    const diastolic = pressure.diastolic;
+    const userId = user._id;
+    return pressureModel.create({date, systolic, diastolic, userId});
+  });
 };
 
 
