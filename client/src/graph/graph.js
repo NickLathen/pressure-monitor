@@ -1,5 +1,6 @@
 const BORDER_WIDTH = .10;
-const oneDay = 24 * 60 * 60 * 1000;
+const oneHour = 60 * 60 * 1000;
+const oneDay = 24 * oneHour;
 const oneWeek = 7 * oneDay;
 const oneMonth = 30 * oneDay;
 
@@ -203,8 +204,15 @@ export default class Graph {
     c.strokeStyle = 'black';
   }
  
-  findFirstMonday() {
-    let currDate = this.startDate + oneDay * 3;
+  findNextDay(date) {
+    let currDate = date + oneDay + oneHour * 2;
+    let currDateObject = new Date(currDate);
+    currDate = currDate - currDateObject.getHours() * 60 * 60 * 1000 - currDateObject.getMinutes() * 60 * 1000;
+    return currDate;
+  } 
+
+  findNextMonday(date) {
+    let currDate = date + oneDay;
     let currDateObject = new Date(currDate);
     let currDay = currDateObject.getDay();
     while (currDay !== 1) {
@@ -216,23 +224,70 @@ export default class Graph {
     return currDate;
   }
 
+  findNextMondaySkip(date) {
+    return this.findNextMonday(date + oneWeek);
+  }
+
+  findFirstOfMonth(date) {
+    let currDate = date + oneDay;
+    let currDateObject = new Date(currDate);
+    let currMonthDay = currDateObject.getDate();
+    while (currMonthDay !== 1) {
+      currDate = currDate + oneDay;
+      currDateObject = new Date(currDate);
+      currMonthDay = currDateObject.getDate();
+    }
+    currDate = currDate - currDateObject.getHours() * 60 * 60 * 1000 - currDateObject.getMinutes() * 60 * 1000;
+    return currDate;
+  }
+
+  findFirstOfMonthSkip(date) {
+    return this.findFirstOfMonth(date + oneMonth + oneDay * 5);
+  }
+
+  getMonth(month) {
+    const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+    return months[month - 1];
+  }
+
   drawXAxisLabels() {
-    const amount = 4;
-    const type = this.period.type;
-    const labelSpacing = (this.unitWidth) / (amount - 1);
+    let labelDate;
+    let labelDateFunction;
+    let labelType;
+    if (this.unitWidth <= oneWeek * 1.5) {
+      labelDateFunction = this.findNextDay;
+      labelType = 'date';
+    } else if (this.unitWidth <= 1.5 * oneMonth) {
+      labelDateFunction = this.findNextMonday;
+      labelType = 'date';
+    } else if (this.unitWidth <= 2 * oneMonth) {
+      labelDateFunction = this.findNextMondaySkip.bind(this);
+      labelType = 'date';
+    } else if (this.unitWidth <= 6 * oneMonth) {
+      labelDateFunction = this.findFirstOfMonth;
+      labelType = 'month';
+    } else {
+      labelDateFunction = this.findFirstOfMonthSkip.bind(this);
+      labelType = 'month';
+    }
+    labelDate = labelDateFunction(this.startDate);
     const c = this.context;
     c.fillStyle = 'grey';
     c.beginPath();
-    var labelDate = this.findFirstMonday();
-    for (var label = 1; label <= amount; label++) {
+    for (labelDate; labelDate <= this.startDate + this.unitWidth; labelDate = labelDateFunction(labelDate)) {
       const labelDateObject = new Date(labelDate);
       const month = labelDateObject.getMonth() + 1;
       const date = labelDateObject.getDate();
       const labelPosition = this.convertGraphToCanvas(labelDate, this.minY);
-      const fontSize = Math.floor(this.width * (1 - BORDER_WIDTH) / 20);
+      const fontSize = Math.floor(this.width * (1 - BORDER_WIDTH) / 30);
       c.font = `${fontSize}px sans-serif`;
-      c.fillText(`${month}/${date}`, labelPosition.x + -1.5 * fontSize, labelPosition.y + fontSize);
-      labelDate = labelDate + oneWeek;
+      let text = '';
+      if (labelType === 'date') {
+        text = `${month}/${date}`;
+      } else if (labelType === 'month') {
+        text = this.getMonth(month);
+      }
+      c.fillText(text, labelPosition.x + -1.5 * fontSize, labelPosition.y + fontSize);
     }
     c.stroke();
     c.fillStyle = 'black';
@@ -244,7 +299,10 @@ export default class Graph {
     }
     this.unitHeight = this.maxY - this.minY + (this.maxY - this.minY) * .1;
     this.unitWidth = this.convertPeriodToMilliseconds(this.period);
-    this.minOffset = -this.unitWidth * .01;
+    this.minOffset = -this.unitWidth * .02;
+    if (!this.offset) {
+      this.offset = this.minOffset;
+    }
     this.startDate = this.currentDate - this.unitWidth - this.offset;
     this.clear();
     this.drawDataSets();

@@ -27,8 +27,8 @@ export default class Nav extends React.Component {
       <div className='nav'>
         {profile.name ? (
           <div className='nav-profile'>
-            <p className='nav-profile-message'>{`You are logged in as ${profile.name}.`}</p>
-            <button className='button-logout' onClick={this.logout.bind(this)}>Logout</button>
+            <p className='nav-profile-message noselect'>{`You are logged in as ${profile.name}.`}</p>
+            <button className='button-logout noselect' onClick={this.logout.bind(this)}>Logout</button>
           </div>
           ) : null
         }

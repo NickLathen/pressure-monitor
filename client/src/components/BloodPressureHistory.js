@@ -59,8 +59,8 @@ export default class BloodPressureHistory extends React.Component {
     return (
       <div className='blood-pressure-history'>
         <div className='graph-header'>
-          <p className='graph-header-title'>History</p>
-          <select className='graph-header-dropdown' onChange={this.periodChange.bind(this)} defaultValue='1month'>
+          <p className='graph-header-title noselect'>History</p>
+          <select className='graph-header-dropdown noselect' onChange={this.periodChange.bind(this)} defaultValue='1month'>
             <option value='1week'>Last Week</option>
             <option value='2week'>Last 2 Weeks</option>
             <option value='1month'>Last Month</option>

@@ -35,13 +35,13 @@ export default class BloodPressureInput extends React.Component {
     return (
       <div className='blood-pressure-input'>
         <div className='blood-pressure-input-container'>
-          <p className='blood-pressure-input-header'>Record Today's Blood Pressure</p>
+          <p className='blood-pressure-input-header noselect'>Record Today's Blood Pressure</p>
           <div className = 'blood-pressure-text-border'>
             <input className='systolic-input' onKeyDown={this.swapInputField.bind(this)} type='text' maxLength='3'/>
-            <p className='tight-slash'>/</p>
+            <p className='tight-slash noselect'>/</p>
             <input className='diastolic-input' onKeyDown={this.submitOnEnter.bind(this)} type='text' maxLength='3'/> 
           </div>
-          <button className='button-submit' onClick={this.submitInput.bind(this)}>Submit</button>
+          <button className='button-submit noselect' onClick={this.submitInput.bind(this)}>Submit</button>
           <p className='submit-warning'></p>
         </div>
       </div>
