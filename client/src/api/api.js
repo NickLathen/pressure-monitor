@@ -26,6 +26,9 @@ export default {
       url: `/api/getPressures?token=${token}`,
       method: 'GET',
       json: true
+    })
+    .then(response => {
+      return response.body;
     });
   }
 };

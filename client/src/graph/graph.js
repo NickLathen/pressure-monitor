@@ -107,6 +107,15 @@ export default class Graph {
     }
   }
 
+  kill() {
+    this.stopResize();
+    cancelAnimationFrame(this.scrollTimeout);
+    document.removeEventListener('mouseup', this.mouseupHandler);
+    document.removeEventListener('mousemove', this.mousemoveHandler);
+    this.canvas.removeEventListener('mousedown', this.mousedownHandler);
+    this.canvas.removeEventListener('dblclick', this.scrollHome);
+  }
+
   convertCanvasToCartesian(x, y) {
     return {
       x: x,

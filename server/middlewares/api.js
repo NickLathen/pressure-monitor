@@ -36,7 +36,7 @@ module.exports = {
     const token = body.token;
     const diastolic = body.diastolic;
     const systolic = body.systolic;
-    const date = Date.now();
+    const date = body.date ? body.date : Date.now();
     getUsername(token)
     .then(username => {
       userController.addPressure(username, {date, systolic, diastolic})
@@ -52,9 +52,7 @@ module.exports = {
     });
   },
   getPressures(request, response) {
-    const body = request.body;
-    const token = body.token;
-    console.log(token);
+    const token = request.query.token;
     getUsername(token)
     .then(username => {
       return userController.getPressures(username)

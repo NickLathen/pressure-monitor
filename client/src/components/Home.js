@@ -8,7 +8,6 @@ export class Home extends React.Component {
     super(props);
     this.state = {
       token: props.auth.getToken(),
-      bloodPressureData: []
     };
   }
 
@@ -16,13 +15,16 @@ export class Home extends React.Component {
     api.submitPressure(this.state.token, systolic, diastolic);
   }
 
+  getPressures() {
+    return api.getPressures(this.state.token);
+  }
+
   render() {
-    const profile = this.state.profile;
     return (
       <div className='home'>
         <BloodPressureInput submitPressure={this.submitPressure.bind(this)}/>
         <hr className='horizontal-divide'></hr>
-        <BloodPressureHistory pressureData={this.state.bloodPressureData}/>
+        <BloodPressureHistory getPressures={this.getPressures.bind(this)}/>
       </div>
     );
   }

@@ -68,30 +68,12 @@ describe('Database', () => {
 describe('api middleware', () => {
   var numPressures = 0;
   it('should submit pressures', done => {
-    const requestMock = {
-      body: {
-        token: token,
-        systolic: pressure1.systolic,
-        diastolic: pressure1.diastolic,
-        date: Date.now()
-      }
-    };
-    const responseMock = {
-      status() {
-      },
-      send(apiResponse) {
-        expect(apiResponse[0]).to.equal('success');
-        done();
-      }
-    };
-    api.submitPressure(requestMock, responseMock);
-  });
-  it('should submit alot of pressures', done => {
     const submitPromiseFunctions = [];
     const pressures = mock.generatePressures();
     pressures.forEach(pressure => {
       const submitPressurePromise = function() {
         return new Promise((resolve, reject) => {
+          console.log(pressure.date);
           const requestMock = {
             body: {
               token: token,
@@ -121,7 +103,7 @@ describe('api middleware', () => {
   }).timeout(0);
   it('should retrieve pressures', done => {
     const requestMock = {
-      body: {
+      query: {
         token: token,
       }
     };
@@ -129,7 +111,7 @@ describe('api middleware', () => {
       status() {
       },
       send(pressures) {
-        expect(pressures.length).to.equal(numPressures + 1);
+        expect(pressures.length).to.equal(numPressures);
         done();
       }
     };
