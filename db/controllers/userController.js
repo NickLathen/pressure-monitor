@@ -12,7 +12,10 @@ const createUser = function createUser(username) {
 const getPressures = function createUser(username) {
   return getUser(username)
   .then(user => {
-    return pressureModel.findAll({where: {userId: user._id}});
+    return pressureModel.findAll({
+      where: {userId: user._id},
+      order: [['date', 'ASC']]
+    });
   });
 };
 const addPressure = function addPressure(username, pressure) {

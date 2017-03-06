@@ -53,6 +53,7 @@ describe('Database', () => {
       userController.getPressures(user1)
       .then((pressures) => {
         expect(pressures.length).to.equal(2);
+        expect(+pressures[1].date > +pressures[0].date).to.be.true;
         done();
       })
       .catch(done);
