@@ -157,19 +157,21 @@ export default class Graph {
     const c = this.context;
     c.lineWidth = this.height / 180;
     this.dataSets.forEach(dataSet => {
-      const startingPoint = this.convertGraphToCanvas(dataSet.points[0].date, dataSet.points[0].value);
-      c.strokeStyle = dataSet.color;
-      c.beginPath();
-      c.moveTo(startingPoint.x, startingPoint.y);
-      dataSet.points.forEach(dataPoint => {
-        if (dataPoint.date < this.startDate - oneMonth || dataPoint.date > (this.startDate + this.unitWidth) + oneMonth) {
-          return;
-        } else {
-          const canvasCoordinates = this.convertGraphToCanvas(dataPoint.date, dataPoint.value);
-          c.lineTo(canvasCoordinates.x, canvasCoordinates.y);
-        }
-      }); 
-      c.stroke();
+      if (dataSet.points.length > 0) {
+        const startingPoint = this.convertGraphToCanvas(dataSet.points[0].date, dataSet.points[0].value);
+        c.strokeStyle = dataSet.color;
+        c.beginPath();
+        c.moveTo(startingPoint.x, startingPoint.y);
+        dataSet.points.forEach(dataPoint => {
+          if (dataPoint.date < this.startDate - oneMonth || dataPoint.date > (this.startDate + this.unitWidth) + oneMonth) {
+            return;
+          } else {
+            const canvasCoordinates = this.convertGraphToCanvas(dataPoint.date, dataPoint.value);
+            c.lineTo(canvasCoordinates.x, canvasCoordinates.y);
+          }
+        }); 
+        c.stroke();
+      }
     });
     c.lineWidth = 1;
     c.strokeStyle = 'black';
