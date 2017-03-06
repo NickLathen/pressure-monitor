@@ -10,10 +10,7 @@ const user = db.define('user', {
   username: {
     type: Sequelize.TEXT,
     unique: true
-  },
-  password: {
-    type: Sequelize.TEXT
-  },
+  }
 });
 
 module.exports = user;

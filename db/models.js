@@ -2,7 +2,7 @@ const db = require('./db.js');
 const userModel = require('./models/userModel.js');
 const pressureModel = require('./models/pressureModel.js');
 
-userModel.hasMany(pressureModel, {as: 'pressureReadings', foreignKey: 'userId'});
+userModel.hasMany(pressureModel, {as: 'pressures', foreignKey: 'userId'});
 
 const loadOrder = [
   userModel,
