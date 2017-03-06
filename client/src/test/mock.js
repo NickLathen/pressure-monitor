@@ -10,7 +10,7 @@ export default {
   generatePressures: function() {
     let systolicPoints = [];
     let diastolicPoints = [];
-    const now = Date.now();
+    const now = Date.now() - oneDay;
     const then = fiveYearsAgo(now);
     for (let time = then; time <= now; time = time + oneDay) {
       systolicPoints.push({

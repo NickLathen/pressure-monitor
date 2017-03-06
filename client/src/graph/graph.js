@@ -8,7 +8,7 @@ export default class Graph {
     this.canvas = canvas;
     this.container = container;
     this.context = canvas.getContext('2d');
-    this.offset = 0;
+    this.offset = -oneDay;
     this.mousedownHandler = this.mousedownHandler.bind(this);
     this.mouseupHandler = this.mouseupHandler.bind(this);
     this.mousemoveHandler = this.mousemoveHandler.bind(this);
@@ -52,7 +52,7 @@ export default class Graph {
     const movementX = event.movementX;
     this.lastMovementX = movementX;
     this.offset = this.offset + movementX * 1.5 * 1000 * 1000;
-    this.offset = Math.max(0, this.offset);
+    this.offset = Math.max(-oneDay, this.offset);
     this.render();
   }
 
@@ -68,8 +68,8 @@ export default class Graph {
         this.lastMovementX += friction;
       }
       this.offset = this.offset + this.lastMovementX * 1.5 * 1000 * 1000;
-      this.offset = Math.max(0, this.offset);
-      if (this.offset) {
+      this.offset = Math.max(-oneDay, this.offset);
+      if (this.lastMovementX) {
         this.scrollTimeout = requestAnimationFrame(this.momentumLoop);
       }
     }.bind(this);
@@ -81,12 +81,12 @@ export default class Graph {
     cancelAnimationFrame(this.scrollTimeout);
     const scrollPerTick = this.offset / 100;
     this.scrollLoop = function scrollLoop () {
-      if (this.offset > scrollPerTick) {
+      if (this.offset > -oneDay) {
         this.offset -= scrollPerTick;
       } else {
-        this.offset = 0;
+        this.offset = -oneDay;
       }
-      if (this.offset) {
+      if (this.offset !== -oneDay) {
         this.scrollTimeout = requestAnimationFrame(this.scrollLoop);
       }
     }.bind(this);
