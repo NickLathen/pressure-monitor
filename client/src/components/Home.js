@@ -1,6 +1,7 @@
 import React from 'react';
 import BloodPressureInput from './BloodPressureInput';
 import BloodPressureHistory from './BloodPressureHistory';
+import api from '../api/api.js';
 
 export class Home extends React.Component {
   constructor(props) {
@@ -11,12 +12,8 @@ export class Home extends React.Component {
     };
   }
 
-  componentDidMount() {
-    
-  }
-
   submitPressure(systolic, diastolic) {
-
+    api.submitPressure(this.state.token, systolic, diastolic);
   }
 
   render() {

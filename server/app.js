@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const compression = require('compression');
-const authenticate = require('./middlewares/authenticate.js');
+const api = require('./middlewares/api.js');
 const app = express();
 const port = process.env.PORT || 9999;
 const folderNameLength = __dirname.split('').reverse().indexOf('/');
@@ -11,9 +11,9 @@ app.use(compression());
 app.use(express.static(appDirectory + '/client'));
 app.use(bodyParser.json({type: 'application/json'}));
 app.use(bodyParser.urlencoded({type: 'application/x-www-form-urlencoded', extended: true}));
-app.use(authenticate);
 
-
+app.post('/api/submitPressure', api.submitPressure);
+app.get('/api/getPressures', api.getPressures);
 
 app.get('*', (request, response) => {
   response.sendFile(`${appDirectory}/client/index.html`);

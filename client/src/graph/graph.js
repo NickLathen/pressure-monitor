@@ -58,6 +58,7 @@ export default class Graph {
 
   scrollMomentum() {
     const friction = 3;
+    cancelAnimationFrame(this.scrollTimeout);
     this.momentumLoop = function momentumLoop() {
       if (Math.abs(this.lastMovementX) < friction) {
         this.lastMovementX = 0;
@@ -76,6 +77,8 @@ export default class Graph {
   }
 
   scrollHome() {
+    this.lastMovementX = 0;
+    cancelAnimationFrame(this.scrollTimeout);
     const scrollPerTick = this.offset / 100;
     this.scrollLoop = function scrollLoop () {
       if (this.offset > scrollPerTick) {
@@ -93,9 +96,9 @@ export default class Graph {
   startResize() {
     this.resizeLoop = function resizeLoop () {
       this.resizeCanvas();
-      requestAnimationFrame(this.resizeLoop.bind(this));
+      requestAnimationFrame(this.resizeLoop);
     }.bind(this);
-    requestAnimationFrame(this.resizeLoop.bind(this));
+    requestAnimationFrame(this.resizeLoop);
   }
 
   stopResize() {

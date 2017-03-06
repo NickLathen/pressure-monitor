@@ -3,11 +3,18 @@ const userModel = models.userModel;
 const pressureModel = models.pressureModel;
 
 
-const getUser = function getUser(username) {
-  return userModel.findOne({where: {username}});
-};
 const createUser = function createUser(username) {
   return userModel.create({username});
+};
+const getUser = function getUser(username) {
+  return userModel.findOne({where: {username}})
+  .then(user => {
+    if (user) {
+      return user;
+    } else {
+      return createUser(username);
+    }
+  });
 };
 const getPressures = function createUser(username) {
   return getUser(username)
