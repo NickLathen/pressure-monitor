@@ -156,25 +156,39 @@ export default class Graph {
   drawDataSets() {
     const c = this.context;
     c.lineWidth = this.height / 180;
+    const pointSize = c.lineWidth * 1.5;
     this.dataSets.forEach(dataSet => {
       if (dataSet.points.length > 0) {
-        const startingPoint = this.convertGraphToCanvas(dataSet.points[0].date, dataSet.points[0].value);
+        let startingPoint = this.convertGraphToCanvas(dataSet.points[0].date, dataSet.points[0].value);
         c.strokeStyle = dataSet.color;
+        c.fillStyle = dataSet.color;
         c.beginPath();
         c.moveTo(startingPoint.x, startingPoint.y);
+        c.ellipse(startingPoint.x, startingPoint.y, pointSize, pointSize, 0, 0, Math.PI * 2);
+        c.fill();
+        c.closePath();
         dataSet.points.forEach(dataPoint => {
           if (dataPoint.date < this.startDate - oneMonth || dataPoint.date > (this.startDate + this.unitWidth) + oneMonth) {
             return;
           } else {
             const canvasCoordinates = this.convertGraphToCanvas(dataPoint.date, dataPoint.value);
+            c.beginPath();
+            c.moveTo(startingPoint.x, startingPoint.y);
             c.lineTo(canvasCoordinates.x, canvasCoordinates.y);
+            c.stroke();
+            c.closePath();
+            c.beginPath();
+            c.ellipse(canvasCoordinates.x, canvasCoordinates.y, pointSize, pointSize, 0, 0, Math.PI * 2);
+            c.fill();
+            c.closePath();
+            startingPoint = canvasCoordinates;
           }
         }); 
-        c.stroke();
       }
     });
     c.lineWidth = 1;
     c.strokeStyle = 'black';
+    c.fillStyle = 'black';
   }
 
   drawRows() {
@@ -303,9 +317,9 @@ export default class Graph {
     }
     this.startDate = this.currentDate - this.unitWidth - this.offset;
     this.clear();
+    this.drawRows();
     this.drawDataSets();
     this.clearYAxis();
-    this.drawRows();
     this.drawXAxisLabels();
   }
   
