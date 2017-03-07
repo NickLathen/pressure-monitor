@@ -52,7 +52,7 @@ export default class Graph {
   mousemoveHandler(event) {
     const movementX = event.movementX;
     this.lastMovementX = movementX;
-    this.offset = this.offset + movementX * 1.5 * 1000 * 1000;
+    this.offset = this.offset + movementX * this.unitWidth / 1200;
     this.offset = Math.max(this.minOffset, this.offset);
     this.render();
   }
@@ -68,7 +68,7 @@ export default class Graph {
       } else {
         this.lastMovementX += friction;
       }
-      this.offset = this.offset + this.lastMovementX * this.unitWidth / 800;
+      this.offset = this.offset + this.lastMovementX * this.unitWidth / 1200;
       this.offset = Math.max(this.minOffset, this.offset);
       if (this.lastMovementX) {
         this.scrollTimeout = requestAnimationFrame(this.momentumLoop);
