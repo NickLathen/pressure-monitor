@@ -68,7 +68,7 @@ export default class Graph {
       } else {
         this.lastMovementX += friction;
       }
-      this.offset = this.offset + this.lastMovementX * 1.5 * 1000 * 1000;
+      this.offset = this.offset + this.lastMovementX * this.unitWidth / 800;
       this.offset = Math.max(this.minOffset, this.offset);
       if (this.lastMovementX) {
         this.scrollTimeout = requestAnimationFrame(this.momentumLoop);
@@ -193,6 +193,7 @@ export default class Graph {
 
   drawRows() {
     const c = this.context;
+    c.globalCompositeOperation = 'destination-over';
     const rowSpacing = (this.maxY - this.minY) / (this.numRows - 1);
     c.setLineDash([1, 1]);
     c.fillStyle = 'grey';
@@ -214,6 +215,7 @@ export default class Graph {
     c.lineWidth = 1;
     c.fillStyle = 'black';
     c.strokeStyle = 'black';
+    c.globalCompositeOperation = 'source-over';
   }
  
   findNextDay(date) {
@@ -317,9 +319,9 @@ export default class Graph {
     }
     this.startDate = this.currentDate - this.unitWidth - this.offset;
     this.clear();
-    this.drawRows();
     this.drawDataSets();
     this.clearYAxis();
+    this.drawRows();
     this.drawXAxisLabels();
   }
   
