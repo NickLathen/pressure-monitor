@@ -28,10 +28,13 @@ export class Home extends React.Component {
         systolicPressures.push({date: +pressure.date, value: pressure.systolic});
         diastolicPressures.push({date: +pressure.date, value: pressure.diastolic});
       });
-      this.setState({
+      const newState = {
         token: this.state.token,
         systolicPressures,
         diastolicPressures
+      };
+      this.setState(newState, () => {
+        this.forceUpdate();
       });
     });
   }

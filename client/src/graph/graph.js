@@ -10,7 +10,6 @@ export default class Graph {
     this.container = container;
     this.context = canvas.getContext('2d');
     this.minOffset = 0;
-    this.offset = this.minOffset;
     this.mousedownHandler = this.mousedownHandler.bind(this);
     this.mouseupHandler = this.mouseupHandler.bind(this);
     this.mousemoveHandler = this.mousemoveHandler.bind(this);
@@ -85,9 +84,8 @@ export default class Graph {
     this.scrollLoop = function scrollLoop () {
       if (this.offset > this.minOffset) {
         this.offset -= scrollPerTick;
-      } else {
-        this.offset = this.minOffset;
       }
+      this.offset = Math.max(this.minOffset, this.offset);
       if (this.offset !== this.minOffset) {
         this.scrollTimeout = requestAnimationFrame(this.scrollLoop);
       }
@@ -300,7 +298,7 @@ export default class Graph {
     this.unitHeight = this.maxY - this.minY + (this.maxY - this.minY) * .1;
     this.unitWidth = this.convertPeriodToMilliseconds(this.period);
     this.minOffset = -this.unitWidth * .02;
-    if (!this.offset) {
+    if (this.offset === undefined) {
       this.offset = this.minOffset;
     }
     this.startDate = this.currentDate - this.unitWidth - this.offset;

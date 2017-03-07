@@ -1,8 +1,8 @@
 const oneDay = 24 * 60 * 60 * 1000;
 
-function oneMonthAgo(now) {
-  const oneMonth = 30 * oneDay;
-  return now - oneMonth;
+function oneYearAgo(now) {
+  const oneYear = 365 * oneDay;
+  return now - oneYear;
 }
 
 const promiseAllSync = function promiseAllSync(promiseFunctionArray, index, resultArray) {
@@ -24,8 +24,8 @@ const promiseAllSync = function promiseAllSync(promiseFunctionArray, index, resu
 module.exports = {
   generatePressures() {
     const pressures = [];
-    const now = Date.now();
-    const then = oneMonthAgo(now);
+    const now = Date.now() - oneDay;
+    const then = oneYearAgo(now);
     for (let time = then; time <= now; time = time + oneDay) {
       pressures.push({
         date: time,

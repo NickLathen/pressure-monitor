@@ -21,8 +21,9 @@ const getUsername = function getUsername(token) {
     url: `https://${AUTH0_DOMAIN}/tokeninfo?id_token=${token}`
   })
   .then((response) => {
-    const username = JSON.parse(response.body).email;
-    if (username) {
+    const body = response.body;
+    if (body !== 'Unauthorized') {
+      username = JSON.parse(body).email;
       return username;
     } else {
       throw Error('no user found with that token.');
