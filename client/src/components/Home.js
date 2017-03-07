@@ -15,12 +15,13 @@ export class Home extends React.Component {
   }
 
   submitPressure(systolic, diastolic) {
-    api.submitPressure(this.state.token, systolic, diastolic);
-    this.getPressures();
+    return api.submitPressure(this.state.token, systolic, diastolic).then(() => {
+      return this.getPressures();
+    });
   }
 
   getPressures() {
-    api.getPressures(this.state.token)
+    return api.getPressures(this.state.token)
     .then(pressures => {
       const systolicPressures = [];
       const diastolicPressures = [];
@@ -29,13 +30,10 @@ export class Home extends React.Component {
         diastolicPressures.push({date: +pressure.date, value: pressure.diastolic});
       });
       const newState = {
-        token: this.state.token,
         systolicPressures,
         diastolicPressures
       };
-      this.setState(newState, () => {
-        this.forceUpdate();
-      });
+      this.setState(newState);
     });
   }
 

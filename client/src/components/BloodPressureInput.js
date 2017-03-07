@@ -13,7 +13,11 @@ export default class BloodPressureInput extends React.Component {
     if (!systolicPressure || !diastolicPressure) {
       document.querySelector('.submit-warning').innerText = 'Pressure must contain only numbers.';
     } else {
-      this.submitPressure(systolicPressure, diastolicPressure);
+      this.submitPressure(systolicPressure, diastolicPressure)
+      .then(() => {
+        document.querySelector('.systolic-input').value = '';
+        document.querySelector('.diastolic-input').value = '';
+      });
     }
   }
 

@@ -38,12 +38,13 @@ module.exports = {
     const diastolic = body.diastolic;
     const systolic = body.systolic;
     const date = body.date ? body.date : Date.now();
-    getUsername(token)
+    return getUsername(token)
     .then(username => {
-      userController.addPressure(username, {date, systolic, diastolic})
+      return userController.addPressure(username, {date, systolic, diastolic})
       .then(pressure => {
         response.status(200);
         response.send(['success']);
+        return;
       })
       .catch(error => {
         console.error(error);
